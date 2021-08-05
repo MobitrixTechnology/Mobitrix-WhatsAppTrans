@@ -1,5 +1,5 @@
 #pragma once
-//android 到 IOS装换
+
 #include "publicfun.h"
 #include "sqliteparsing.h"
 
@@ -26,7 +26,7 @@ public:
 
 	int m_totalnum;
 private:
-	std::string m_androiddatapath;//Android 备份数据目录
+	std::string m_androiddatapath;
 	
 	std::string mNewChatStoragedbfile;//
 	std::string mmsgstoredbfile;

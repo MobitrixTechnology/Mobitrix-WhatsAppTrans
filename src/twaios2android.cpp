@@ -9,8 +9,7 @@ std::string tCMGetDateTimeFromTimet(int lTime)
 	//time_t lTime;
 
 	time_t tmNow = lTime;
-	tm* ptmNow = localtime(&tmNow);  //从tm结构体中可以取到年月日时分秒等
-
+	tm* ptmNow = localtime(&tmNow);  
 	char curTime[64] = { 0 };
 	strftime(curTime, 35, "[%Y-%m-%d %H:%M:%S] ", ptmNow);
 	return std::string(curTime);
@@ -34,7 +33,6 @@ int twaios2android::towork(const char* datapath)
 	mtxtpath +="\\txt\\";
 	CreatePath(mtxtpath.c_str());
 
-	//实体文件
 	mWhatsAppMediapath = mtoandroidpath;
 	mWhatsAppMediapath += "\\Media\\";
 	
@@ -77,7 +75,7 @@ int twaios2android::readsessiondata()
 			std::string ZPARTNERNAME = FindDataFromMap(vmapstr.at(n), "ZPARTNERNAME");
 			std::string ZSESSIONTYPE = FindDataFromMap(vmapstr.at(n), "ZSESSIONTYPE");
 			osessioninfo.id = atoi(Z_PK.c_str());
-			osessioninfo.key_remote_jid = ZCONTACTJID;//群组
+			osessioninfo.key_remote_jid = ZCONTACTJID;
 			//if (!ZGROUPINFO.empty())
 			if (ZCONTACTJID == "status@broadcast")
 			{
@@ -149,7 +147,7 @@ bool twaios2android::getkeyremotejid(int id, std::string& jid, int& gtype)
 
 	return false;
 }
-//读取附件信息
+
 bool twaios2android::getmediainfo(tsqliteparsing* osqliteparser,int id,std::string & media_url,std::string &media_mime_type,std::string & media_size,std::string& media_name,std::string &media_hash,int & media_duration,int & origin,std::string &latitude,std::string & longitude,std::string & media_caption,std::string &thumbpath)
 {//
 
@@ -332,59 +330,57 @@ int  twaios2android::readmessagesdata()
 			{
 				status = 0;
 			}
-			//Android  0:文字  1：图片 2：语音  3 录像视频 4：联系人 5：位置 9：文件 20表情
 			int ztype = atoi(ZMESSAGETYPE.c_str());
 			if (ztype == 0)
-			{//文字
+			{
 
 				mediawatype = 0;
 			}
 			else if (ztype == 1)
-			{//图片
+			{
 				mediawatype = 1;
 			}
 			else if (ztype == 2)
-			{//录像（视频）
+			{
 				mediawatype = 3;
 			}
 			else if (ztype == 3)
-			{//语音
+			{
 				mediawatype = 2;
 			}
 			else if (ztype == 4)
-			{//联系人
+			{
 				mediawatype = 4;
 			}
 			else if (ztype == 5)
-			{//位置
+			{
 				mediawatype = 5;
 			}
 			else if (ztype == 6)
-			{//创建群的提示
+			{
 				continue;
 
 			}
 			else if (ztype == 7)
-			{//群链接信息
-				//continue;
+			{
 				mediawatype = 97;
 			}
 
 			else if (ztype == 8)
-			{//文件
+			{
 				mediawatype = 9;
 			}
 
 			else if (ztype == 10)
-			{//加密提示
+			{
 				continue;
 			}
 
 			else if (ztype == 15)
-			{//IOS表情图片  -> 20
+			{
 
 				mediawatype = 20;
-				//20210208 表情暂时不能还原
+				
 				continue;
 			}
 			else {
@@ -398,7 +394,7 @@ int  twaios2android::readmessagesdata()
 			{
 				continue;
 			}
-			//获取 key_remote_jid 类型（群或个人）
+
 			int sessionid = atoi(ZCHATSESSION.c_str());
 			std::string jid;
 			int gtype = 0;
@@ -426,7 +422,7 @@ int  twaios2android::readmessagesdata()
 			fromjid = jid;
 			std::string remoteresource = jid;
 			if (gtype == 1 && keyfromme == 0)
-			{//群组
+			{
 
 				std::string ZGROUPMEMBER = FindDataFromMap(vmapstr.at(n), "ZGROUPMEMBER");
 				if (ZGROUPMEMBER.empty())
@@ -480,7 +476,7 @@ int  twaios2android::readmessagesdata()
 
 
 			if (mediawatype == 4)
-			{//联系人
+			{
 
 				metext = std::string(media_mime_type);
 				media_mime_type = "";
@@ -493,7 +489,7 @@ int  twaios2android::readmessagesdata()
 				mediawatype = 0;
 			}
 			else if (mediawatype == 1 || mediawatype == 2 || mediawatype == 3 || mediawatype == 9 || mediawatype == 20)
-			{//图片  语音 WhatsApp Voice Notes  视频WhatsApp Video  文件 WhatsApp Documents
+			{
 				if (!media_name.empty())
 				{
 					isdown = true;
@@ -505,7 +501,7 @@ int  twaios2android::readmessagesdata()
 				}
 
 				if (mediawatype == 1)
-				{//图片
+				{
 					if (!media_name.empty())
 					{
 						media_name = GetFileName_Unxi(media_name.c_str());
@@ -518,7 +514,7 @@ int  twaios2android::readmessagesdata()
 				}
 				else if (mediawatype == 20)
 				{
-					//表情
+					
 					if (!media_name.empty())
 					{
 						media_name = GetFileName_Unxi(media_name.c_str());
@@ -529,7 +525,7 @@ int  twaios2android::readmessagesdata()
 				}
 
 				else if (mediawatype == 2)
-				{//语音
+				{
 
 					if (!media_name.empty())
 					{
@@ -541,7 +537,7 @@ int  twaios2android::readmessagesdata()
 
 				}
 				else if (mediawatype == 3)
-				{//视频
+				{
 
 					if (!media_name.empty())
 					{
@@ -553,7 +549,7 @@ int  twaios2android::readmessagesdata()
 
 				}
 				else if (mediawatype == 9)
-				{//文件
+				{
 
 					if (!media_name.empty())
 					{
@@ -587,7 +583,7 @@ int  twaios2android::readmessagesdata()
 			len += 128;
 			char* buff = new char[len];
 			int isize = sprintf(buff, "%s%s: %s\r\n", datastr.c_str(), fromjid.c_str(), metext.c_str());
-			//文件名字
+			
 			std::string chatfilename = mtxtpath + jid;
 			chatfilename += ".txt";
 			FILE* pfile = fopen(chatfilename.c_str(), "ab+");

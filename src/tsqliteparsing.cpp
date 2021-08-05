@@ -99,7 +99,7 @@ int tsqliteparsing::InitDataBaseToWal(std::string sPath, bool isWal)
 
 
 
-//执行指令 除却查询
+
 bool tsqliteparsing::SqlExe(char* sql)
 {
 
@@ -125,21 +125,20 @@ bool tsqliteparsing::SqlQuery(const char* sql, std::vector<std::map<std::string,
 		//AWriteLog("work", "SQLITE3 no isopenok  ");
 		return false;
 	}
-	char** dbResult; //是 char ** 类型，两个*号
-	int nRow, nColumn;//行   列
-	int i, j;        //遍历基数
-	int index;        //列
+	char** dbResult; 
+	int nRow, nColumn;
+	int i, j;       
+	int index;        
 	//AWriteLog("work", "SQLITE3 [%s] ", sql);
 	do{
 		res = sqlite3_get_table(pdb, sql, &dbResult, &nRow, &nColumn, &errMsg);
 
 		if (SQLITE_OK == res)
 		{
-			//查询成功
+
 			str.clear();
-			index = nColumn; //前面说过 dbResult 前面第一行数据是字段名称，从 nColumn 索引开始才是真正的数据
-			// 		printf( "查到%d条记录\n", nRow );
-		//	//AWriteLog("whmiddleware", "nRow [%d] ", nRow);
+			index = nColumn;
+			
 			for (i = 0; i < nRow; i++)
 			{
 
@@ -191,7 +190,7 @@ bool tsqliteparsing::SqlQuery(const char* sql, std::vector<std::map<std::string,
 		//	return false;
 		}
 	}while (1);
-	//到这里，不论数据库查询是否成功，都释放 char** 查询结果，使用 sqlite 提供的功能来释放
+	
 	sqlite3_free_table(dbResult);
 	return true;
 
@@ -207,25 +206,25 @@ int tsqliteparsing::SqlQuery(const char* sql, std::string& str, const char* spli
 		return -1;
 	}
 
-	char** dbResult; //是 char ** 类型，两个*号
-	int nRow, nColumn;//行   列
-	int i, j;        //遍历基数
-	int index;        //列
+	char** dbResult; 
+	int nRow, nColumn;
+	int i, j;       
+	int index;        
 
 	res = sqlite3_get_table(pdb, sql, &dbResult, &nRow, &nColumn, &errMsg);
 
 	if (SQLITE_OK == res)
 	{
-		//查询成功
+
 		str.clear();
-		index = nColumn; //前面说过 dbResult 前面第一行数据是字段名称，从 nColumn 索引开始才是真正的数据
-// 		printf( "查到%d条记录\n", nRow );
+		index = nColumn; 
+
 		for (i = 0; i < nRow; i++)
 		{
-			//printf( "第 %d 条记录\n", i+1 );
+
 			for (j = 0; j < nColumn; j++)
 			{
-				//printf( "字段名:%s  ß> 字段值:%s\n",  dbResult[j], dbResult [index] );
+			
 
 				if (dbResult[index] != NULL)
 				{
@@ -244,11 +243,11 @@ int tsqliteparsing::SqlQuery(const char* sql, std::string& str, const char* spli
 	{
 
 		sqlite3_free_table(dbResult);
-		//AWriteLog("work", "SQLITE3 [%s]sqlite3_open error [%s]", sql, errMsg);
+
 		return -1;
 
 	}
-	//到这里，不论数据库查询是否成功，都释放 char** 查询结果，使用 sqlite 提供的功能来释放
+	
 	sqlite3_free_table(dbResult);
 
 	int len = str.size();
@@ -269,11 +268,10 @@ int tsqliteparsing::SqlQuery(const char* sql, std::string& str, const char* spli
 
 bool tsqliteparsing::SqlQuery(const char* sql, std::vector<std::map<std::string, tblockbytes> >& str)
 {
-	//查询数据
 
 	if (!isopenok)
 	{
-		//printf("数据库未成功打开\r\n");
+
 		return false;
 	}
 	bool flg = false;
@@ -294,8 +292,8 @@ bool tsqliteparsing::SqlQuery(const char* sql, std::vector<std::map<std::string,
 			{
 				std::string name = sqlite3_column_name(stmt, m);
 				tblockbytes block;
-				char* data = (char*)sqlite3_column_blob(stmt, m);//得到纪录中的BLOB字段
-				block.plen = sqlite3_column_bytes(stmt, m);//得到字段中数据的长度
+				char* data = (char*)sqlite3_column_blob(stmt, m);
+				block.plen = sqlite3_column_bytes(stmt, m);/
 				block.pdata = new char[block.plen + 1];
 				block.pdata[block.plen] = 0;
 				memcpy(block.pdata, data, block.plen);
@@ -324,7 +322,7 @@ bool tsqliteparsing::SqlQuery_Huawei(const char* sql, std::map<int, std::string>
 
 	if (!isopenok)
 	{
-		//printf("数据库未成功打开\r\n");
+
 		return false;
 	}
 	bool flg = false;
@@ -341,8 +339,8 @@ bool tsqliteparsing::SqlQuery_Huawei(const char* sql, std::map<int, std::string>
 			int count = sqlite3_column_count(stmt);
 			if (count == 4)
 			{
-				char* file_index_data = (char*)sqlite3_column_blob(stmt, 3);//得到纪录中的BLOB字段
-				int file_index_data_len = sqlite3_column_bytes(stmt, 3);//得到字段中数据的长度
+				char* file_index_data = (char*)sqlite3_column_blob(stmt, 3);
+				int file_index_data_len = sqlite3_column_bytes(stmt, 3);
 				char* pdata = new char[file_index_data_len + 1];
 				pdata[file_index_data_len] = 0;
 				memcpy(pdata, file_index_data, file_index_data_len);
@@ -350,16 +348,16 @@ bool tsqliteparsing::SqlQuery_Huawei(const char* sql, std::map<int, std::string>
 				delete[] pdata;
 
 
-				char* cfile_data_mlen = (char*)sqlite3_column_blob(stmt, 1);//得到纪录中的BLOB字段
-				int file_data_mlen_len = sqlite3_column_bytes(stmt, 1);//得到字段中数据的长度
+				char* cfile_data_mlen = (char*)sqlite3_column_blob(stmt, 1);
+				int file_data_mlen_len = sqlite3_column_bytes(stmt, 1);
 				pdata = new char[file_data_mlen_len + 1];
 				pdata[file_data_mlen_len] = 0;
 				memcpy(pdata, cfile_data_mlen, file_data_mlen_len);
 				int  file_data_mlen = atoi(pdata);
 				delete[] pdata;
 
-				char* file_data = (char*)sqlite3_column_blob(stmt, 0);//得到纪录中的BLOB字段
-				int file_data_len = sqlite3_column_bytes(stmt, 0);//得到字段中数据的长度
+				char* file_data = (char*)sqlite3_column_blob(stmt, 0);
+				int file_data_len = sqlite3_column_bytes(stmt, 0);
 
 				if (file_data_len != file_data_mlen)
 				{

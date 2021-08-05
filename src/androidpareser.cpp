@@ -40,8 +40,7 @@ std::string CMGetDateTimeFromTimet(int lTime)
 	//time_t lTime;
 
 	time_t tmNow = lTime;
-	tm* ptmNow = localtime(&tmNow);  //从tm结构体中可以取到年月日时分秒等
-
+	tm* ptmNow = localtime(&tmNow); 
 	char curTime[64] = { 0 };
 	strftime(curTime, 35, "[%Y-%m-%d %H:%M:%S] ", ptmNow);
 	return std::string(curTime);
@@ -95,7 +94,7 @@ int androidpareser::readmessageinffromandroid()
 
 			if (status == 6)
 			{
-				continue;//系统信息
+				continue;
 			}
 			else {
 				status = 8;
@@ -104,44 +103,44 @@ int androidpareser::readmessageinffromandroid()
 			int itype = type;
 
 			if (type == 0)
-			{//文字
+			{
 
 				itype = 0;
-				//可能为链接信息【暂不处理实体】
+				
 			}
 			else if (type == 1)
-			{//图片
+			{
 				itype = 1;
 			}
 			else if (type == 2)
-			{//语音
+			{
 				itype = 3;
 			}
 			else if (type == 3|| type == 13)
-			{//录像（视频）
+			{
 				itype = 2;
 			}
 			else if (type == 4)
-			{//联系人
+			{
 				itype = 4;
 			}
 			else if (type == 5)
-			{//位置
+			{
 				itype = 5;
 			}
 			
 			else if (type ==9)
-			{//文件
+			{
 				itype = 8;
 			}
 
 			else if (type == 10)
-			{//加密提示
+			{
 				continue;
 			}
 
 			else if (type == 20)
-			{//IOS表情图片  -> 20
+			{
 
 				itype = 15;
 				//continue;
@@ -183,14 +182,14 @@ int androidpareser::readmessageinffromandroid()
 			}
 			std::string datatxt="";
 			if (itype == 0)
-			{//文字
+			{
 				datatxt = FindDataFromMap(vmapstr.at(n), "data");
 	
 			}
 			else
 			{
 				datatxt = FindDataFromMap(vmapstr.at(n), "media_name");
-			}//实体
+			}
 			if (datatxt.length() == 0 || datatxt == "")
 			{
 				continue;
@@ -201,7 +200,7 @@ int androidpareser::readmessageinffromandroid()
 			len += 128;
 			char* buff = new char[len];
 			int isize =sprintf(buff,"%s%s: %s\r\n", datastr.c_str(), groupmemberjid.c_str(), datatxt.c_str());
-			//文件名字
+			
 			std::string chatfilename = mtxtpath + key_remote_jid;
 			chatfilename += ".txt";
 			FILE* pfile = fopen(chatfilename.c_str(), "ab+");
